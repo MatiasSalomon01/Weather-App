@@ -62,27 +62,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: !context.read<ThemeProvider>().isDarkMode
-                ? const LinearGradient(
-                    colors: [Color(0xff63608f), Color(0xff49528b)],
-                    stops: [.1, .5],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  )
-                : null),
-        child: CustomScrollView(
-          controller: controller,
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: kToolbarHeight * 5,
-              collapsedHeight: kToolbarHeight * 2.5,
-              flexibleSpace: SafeArea(
-                child: Container(
-                  color: Colors.transparent,
+    return Consumer<ThemeProvider>(
+      builder: (context, state, child) => Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+              gradient: !state.isDarkMode
+                  ? const LinearGradient(
+                      colors: [Color(0xff63608f), Color(0xff49528b)],
+                      stops: [.1, .5],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    )
+                  : null),
+          child: CustomScrollView(
+            controller: controller,
+            slivers: [
+              SliverAppBar(
+                backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+                pinned: true,
+                expandedHeight: kToolbarHeight * 5,
+                collapsedHeight: kToolbarHeight * 2.5,
+                flexibleSpace: SafeArea(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: padding),
                     child: Stack(
@@ -224,21 +224,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-            ),
-            SliverList.separated(
-              itemBuilder: (context, index) => Container(
-                margin: EdgeInsets.symmetric(horizontal: padding * .5),
-                height: 150,
-                decoration: BoxDecoration(
-                    color: !context.read<ThemeProvider>().isDarkMode
-                        ? const Color(0xff3c4274)
-                        : const Color(0xff171717),
-                    borderRadius: BorderRadius.circular(20)),
-              ),
-              itemCount: 10,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-            )
-          ],
+              SliverList.separated(
+                itemBuilder: (context, index) => Container(
+                  margin: EdgeInsets.symmetric(horizontal: padding * .5),
+                  height: 150,
+                  decoration: BoxDecoration(
+                      color: !state.isDarkMode
+                          ? const Color(0xff3c4274)
+                          : const Color(0xff171717),
+                      borderRadius: BorderRadius.circular(20)),
+                ),
+                itemCount: 5,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+              )
+            ],
+          ),
         ),
       ),
     );
