@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
 
 final lightMode = ThemeData.light().copyWith(
   appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
-  scaffoldBackgroundColor: const Color(0xff010101),
+  scaffoldBackgroundColor: const Color(0xff49528b),
 );
 
 final darkMode = ThemeData.dark().copyWith(
