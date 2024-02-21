@@ -18,4 +18,28 @@ class Location {
     required this.tz_id,
     required this.localtime,
   });
+
+  static Location empty() {
+    return Location(
+      name: "",
+      region: "",
+      country: "",
+      lat: 0,
+      lon: 0,
+      tz_id: "",
+      localtime: "",
+    );
+  }
+
+  factory Location.fromJson(Map<String, dynamic> map) {
+    return Location(
+      name: map['name'],
+      region: map['region'],
+      country: map['country'],
+      lat: map['lat'],
+      lon: map['lon'],
+      tz_id: map['tz_id'],
+      localtime: map['localtime'],
+    );
+  }
 }

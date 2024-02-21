@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:weather_app/bloc/weather_bloc.dart';
 
 import 'screens/home_screen.dart';
 
@@ -12,13 +14,16 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      child: Consumer<ThemeProvider>(
-        builder: (context, state, child) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: const HomeScreen(),
-          theme: state.isDarkMode ? darkMode : lightMode,
+    return BlocProvider(
+      create: (context) => WeatherBloc()..add(GetCurrentWeatherEvent()),
+      child: ChangeNotifierProvider(
+        create: (context) => ThemeProvider(),
+        child: Consumer<ThemeProvider>(
+          builder: (context, state, child) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: const HomeScreen(),
+            theme: state.isDarkMode ? darkMode : lightMode,
+          ),
         ),
       ),
     );
