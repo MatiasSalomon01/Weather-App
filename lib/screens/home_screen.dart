@@ -81,11 +81,13 @@ class _HomeScreenState extends State<HomeScreen>
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
         if (state is WeatherLoading) {
-          return const Center(
-            child: Text(
-              'Cargando...',
-              style: TextStyle(
-                color: Colors.white,
+          return const Scaffold(
+            body: Center(
+              child: Text(
+                'Cargando...',
+                style: TextStyle(
+                    // color: Colors.white,
+                    ),
               ),
             ),
           );
