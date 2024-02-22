@@ -78,22 +78,25 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: BlocBuilder<WeatherBloc, WeatherState>(
-        builder: (context, state) {
-          if (state is WeatherLoading) {
-            return const Center(
-              child: Text(
-                'Cargando...',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        if (state is WeatherLoading) {
+          return const Center(
+            child: Text(
+              'Cargando...',
+              style: TextStyle(
+                color: Colors.white,
               ),
-            );
-          }
-          if (state is WeatherResult) {
-            return Consumer<ThemeProvider>(
-              builder: (context, value, child) => Stack(
+            ),
+          );
+        }
+        if (state is WeatherResult) {
+          bool isDay = state.currentWeather.current.is_day == 1;
+          return Consumer<ThemeProvider>(
+            builder: (context, value, child) => Scaffold(
+              backgroundColor:
+                  isDay && !value.isDarkMode ? const Color(0xff61a4f2) : null,
+              body: Stack(
                 children: [
                   Transform.translate(
                     offset: Offset(dxAnimationDrawer.value, 0),
@@ -110,21 +113,25 @@ class _HomeScreenState extends State<HomeScreen>
                       offset: Offset(dxAnimation.value, 0),
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              bottomLeft: Radius.circular(20),
-                            ),
-                            gradient: !value.isDarkMode
-                                ? const LinearGradient(
-                                    colors: [
-                                      Color(0xff63608f),
-                                      Color(0xff49528b)
-                                    ],
-                                    stops: [.1, .5],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  )
-                                : null),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
+                          ),
+                          color: isDay && !value.isDarkMode
+                              ? const Color(0xff88bbfd)
+                              : null,
+                          gradient: !value.isDarkMode && !isDay
+                              ? const LinearGradient(
+                                  colors: [
+                                    Color(0xff63608f),
+                                    Color(0xff49528b)
+                                  ],
+                                  stops: [.1, .5],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                )
+                              : null,
+                        ),
                         child: CustomAppBarWithContent(
                           scrollController: scrollController,
                           padding: padding,
@@ -138,19 +145,19 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ],
               ),
-            );
-          } else {
-            return const Center(
-              child: Text(
-                'Error',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+            ),
+          );
+        } else {
+          return const Center(
+            child: Text(
+              'Error',
+              style: TextStyle(
+                color: Colors.white,
               ),
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }

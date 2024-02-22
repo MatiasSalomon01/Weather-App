@@ -19,14 +19,18 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDay = currentWeather.current.is_day == 1;
     return SafeArea(
       child: Container(
         // margin: EdgeInsets.only(left: 10),
         height: size.height,
         width: end - 5,
         decoration: BoxDecoration(
-          color:
-              !isDarkMode ? const Color(0xff63608f) : const Color(0xff171717),
+          color: !isDarkMode
+              ? isDay
+                  ? const Color(0xff88bbfd)
+                  : const Color(0xff63608f)
+              : const Color(0xff171717),
           borderRadius: const BorderRadius.only(
             topRight: Radius.circular(20),
             bottomRight: Radius.circular(20),

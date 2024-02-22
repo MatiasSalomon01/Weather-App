@@ -24,6 +24,7 @@ class CustomAppBarWithContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDay = currentWeather.current.is_day == 1;
     return CustomScrollView(
       controller: scrollController,
       slivers: [
@@ -118,7 +119,11 @@ class CustomAppBarWithContent extends StatelessWidget {
                                   ),
                                 ),
                                 Lottie.asset(
-                                  mapLotties[0]!.small,
+                                  getLottie(
+                                    currentWeather.current.is_day,
+                                    currentWeather.current.condition.code,
+                                  ).small,
+                                  // mapLotties[0]!.small,
                                   height: 80,
                                 ),
                               ],
@@ -171,7 +176,10 @@ class CustomAppBarWithContent extends StatelessWidget {
                   ],
                 ),
                 Positioned(
-                  right: mapLotties[currentWeather.current.is_day]!.right,
+                  right: getLottie(
+                    currentWeather.current.is_day,
+                    currentWeather.current.condition.code,
+                  ).right,
                   top: 0,
                   bottom: 0,
                   child: AnimatedOpacity(
@@ -179,26 +187,19 @@ class CustomAppBarWithContent extends StatelessWidget {
                     duration: Duration.zero,
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width *
-                          mapLotties[currentWeather.current.is_day]!.percentage,
+                          getLottie(
+                            currentWeather.current.is_day,
+                            currentWeather.current.condition.code,
+                          ).percentage,
                       child: Lottie.asset(
-                        mapLotties[currentWeather.current.is_day]!.big,
+                        getLottie(
+                          currentWeather.current.is_day,
+                          currentWeather.current.condition.code,
+                        ).big,
                       ),
                     ),
                   ),
                 ),
-                // Positioned(
-                //   right: 0,
-                //   bottom: 0,
-                //   top: 0,
-                //   child: AnimatedOpacity(
-                //     opacity: 1,
-                //     duration: Duration.zero,
-                // child: Lottie.asset(
-                //   'assets/person-in-beach.json',
-                //   height: 100,
-                // ),
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -209,7 +210,9 @@ class CustomAppBarWithContent extends StatelessWidget {
             height: 150,
             decoration: BoxDecoration(
                 color: !isDarkMode
-                    ? const Color(0xff3c4274)
+                    ? isDay
+                        ? const Color(0xff61a4f2)
+                        : const Color(0xff3c4274)
                     : const Color(0xff171717),
                 borderRadius: BorderRadius.circular(20)),
           ),
@@ -219,7 +222,49 @@ class CustomAppBarWithContent extends StatelessWidget {
       ],
     );
   }
+
+  LottieImages getLottie(int isDay, int code) {
+    if (isDay != 1) {
+      bool exist = mapLottiesNight.containsKey(code);
+      if (!exist) return mapLottiesNight.values.first;
+      return mapLottiesNight[code]!;
+    } else {
+      bool exist = mapLottiesDay.containsKey(code);
+      if (!exist) return mapLottiesDay.values.first;
+      return mapLottiesDay[code]!;
+    }
+  }
 }
+
+final mapLottiesDay = {
+  1000: LottieImages(
+    big: 'assets/person-in-beach.json',
+    small: 'assets/sun3.json',
+    right: 0,
+    percentage: .4,
+  ),
+  1003: LottieImages(
+    big: 'assets/person-in-beach.json',
+    small: 'assets/sun-with-cloud.json',
+    right: 0,
+    percentage: .4,
+  ),
+  1006: LottieImages(
+    big: 'assets/hot-air-baloon.json',
+    small: 'assets/sun-with-cloud.json',
+    right: -60,
+    percentage: .7,
+  ),
+};
+
+final mapLottiesNight = {
+  1000: LottieImages(
+    big: 'assets/moon.json',
+    small: 'assets/moon-with-stars.json',
+    right: -60,
+    percentage: .7,
+  ),
+};
 
 class _Temp extends StatefulWidget {
   const _Temp({
@@ -277,27 +322,6 @@ class _TempState extends State<_Temp> with SingleTickerProviderStateMixin {
     );
   }
 }
-
-final mapLotties = {
-  0: LottieImages(
-    big: 'assets/moon.json',
-    small: 'assets/moon-with-stars.json',
-    right: -60,
-    percentage: .7,
-  ),
-  1: LottieImages(
-    big: 'assets/person-in-beach.json',
-    small: 'assets/sun3.json',
-    right: 0,
-    percentage: .4,
-  ),
-  2: LottieImages(
-    big: 'assets/moon.json',
-    small: 'assets/moon-with-stars.json',
-    right: -60,
-    percentage: .7,
-  ),
-};
 
 class LottieImages {
   final String big;
