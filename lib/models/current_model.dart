@@ -25,8 +25,8 @@ class Current {
     required this.humidity,
     required this.feelslike_c,
     required this.uv,
-    this.maxtemp_c = 0,
-    this.mintemp_c = 0,
+    this.maxtemp_c = 0.0,
+    this.mintemp_c = 0.0,
   });
 
   static Current empty() {

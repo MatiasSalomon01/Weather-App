@@ -98,26 +98,32 @@ class CustomAppBarWithContent extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${currentWeather.current.maxtemp_c.toInt()}º / ${currentWeather.current.mintemp_c.toInt()}º',
-                                      style: const TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 15,
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${currentWeather.current.maxtemp_c.toInt()}º / ${currentWeather.current.mintemp_c.toInt()}º',
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 15,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      currentWeather.current.condition.text,
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                  ],
+                                      Text(
+                                        currentWeather.current.condition.text,
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Lottie.asset(
-                                  'assets/moon-with-stars.json',
-                                  height: 80,
+                                Expanded(
+                                  child: Lottie.asset(
+                                    'assets/moon-with-stars.json',
+                                    height: 80,
+                                  ),
                                 ),
                               ],
                             ),
