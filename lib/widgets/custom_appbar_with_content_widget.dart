@@ -82,13 +82,9 @@ class CustomAppBarWithContent extends StatelessWidget {
                     const SizedBox(height: 15),
                     Row(
                       children: [
-                        Text(
-                          '${currentWeather.current.temp_c}º',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 70,
-                            height: 1.2,
-                          ),
+                        _Temp(
+                          currentWeather: currentWeather,
+                          isDarkMode: isDarkMode,
                         ),
                         const SizedBox(width: 15),
                         Expanded(
@@ -113,17 +109,17 @@ class CustomAppBarWithContent extends StatelessWidget {
                                       ),
                                       Text(
                                         currentWeather.current.condition.text,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                             color: Colors.white, fontSize: 20),
                                       ),
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Lottie.asset(
-                                    'assets/moon-with-stars.json',
-                                    height: 80,
-                                  ),
+                                Lottie.asset(
+                                  mapLotties[0]!.small,
+                                  height: 80,
                                 ),
                               ],
                             ),
@@ -149,7 +145,9 @@ class CustomAppBarWithContent extends StatelessWidget {
                                 Text(
                                   currentWeather.location.name,
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 18),
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
                                 ),
                                 const SizedBox(width: 3),
                                 const Icon(
@@ -163,7 +161,9 @@ class CustomAppBarWithContent extends StatelessWidget {
                             Text(
                               '${currentWeather.current.maxtemp_c.toInt()}º / ${currentWeather.current.mintemp_c.toInt()}º Sensacion térmica ${currentWeather.current.feelslike_c.toInt()}°',
                               style: const TextStyle(
-                                  color: Colors.white70, fontSize: 15),
+                                color: Colors.white70,
+                                fontSize: 15,
+                              ),
                             ),
                           ],
                         ),
@@ -171,17 +171,34 @@ class CustomAppBarWithContent extends StatelessWidget {
                   ],
                 ),
                 Positioned(
-                  right: -60,
+                  right: mapLotties[currentWeather.current.is_day]!.right,
+                  top: 0,
                   bottom: 0,
                   child: AnimatedOpacity(
                     opacity: 1 - opacity,
                     duration: Duration.zero,
-                    child: Lottie.asset(
-                      'assets/moon.json',
-                      height: 300,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width *
+                          mapLotties[currentWeather.current.is_day]!.percentage,
+                      child: Lottie.asset(
+                        mapLotties[currentWeather.current.is_day]!.big,
+                      ),
                     ),
                   ),
                 ),
+                // Positioned(
+                //   right: 0,
+                //   bottom: 0,
+                //   top: 0,
+                //   child: AnimatedOpacity(
+                //     opacity: 1,
+                //     duration: Duration.zero,
+                // child: Lottie.asset(
+                //   'assets/person-in-beach.json',
+                //   height: 100,
+                // ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -202,4 +219,96 @@ class CustomAppBarWithContent extends StatelessWidget {
       ],
     );
   }
+}
+
+class _Temp extends StatefulWidget {
+  const _Temp({
+    super.key,
+    required this.currentWeather,
+    required this.isDarkMode,
+  });
+
+  final CurrentWeatherResponse currentWeather;
+  final bool isDarkMode;
+
+  @override
+  State<_Temp> createState() => _TempState();
+}
+
+class _TempState extends State<_Temp> with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+  late final Animation<double> animation;
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    animation = Tween(begin: 70.0, end: 70.0 / 1.5).animate(controller);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.isDarkMode) {
+      controller.forward();
+    } else {
+      controller.reverse();
+    }
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) => Text(
+        '${widget.currentWeather.current.temp_c.toInt()}º',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: animation.value,
+          height: 1.2,
+        ),
+      ),
+    );
+  }
+}
+
+final mapLotties = {
+  0: LottieImages(
+    big: 'assets/moon.json',
+    small: 'assets/moon-with-stars.json',
+    right: -60,
+    percentage: .7,
+  ),
+  1: LottieImages(
+    big: 'assets/person-in-beach.json',
+    small: 'assets/sun3.json',
+    right: 0,
+    percentage: .4,
+  ),
+  2: LottieImages(
+    big: 'assets/moon.json',
+    small: 'assets/moon-with-stars.json',
+    right: -60,
+    percentage: .7,
+  ),
+};
+
+class LottieImages {
+  final String big;
+  final String small;
+  final double right;
+  final double percentage;
+
+  LottieImages({
+    required this.big,
+    required this.small,
+    required this.right,
+    required this.percentage,
+  });
 }
