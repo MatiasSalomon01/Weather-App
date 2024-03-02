@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/bloc/weather_bloc.dart';
@@ -96,56 +97,68 @@ class _HomeScreenState extends State<HomeScreen>
           bool isDay = state.currentWeather.current.is_day == 1;
           return Consumer<ThemeProvider>(
             builder: (context, value, child) => Scaffold(
-              backgroundColor:
-                  isDay && !value.isDarkMode ? const Color(0xff61a4f2) : null,
-              body: Stack(
-                children: [
-                  Transform.translate(
-                    offset: Offset(dxAnimationDrawer.value, 0),
-                    child: CustomDrawer(
-                      size: size,
-                      end: end,
-                      padding: padding,
-                      currentWeather: state.currentWeather,
-                      isDarkMode: value.isDarkMode,
+              extendBody: true,
+              extendBodyBehindAppBar: true,
+              backgroundColor: !value.isDarkMode
+                  ? isDay
+                      ? const Color(0xff88bbfd)
+                      : const Color(0xff63608f)
+                  : null,
+              //const Color(0xff61a4f2)
+              body: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: const SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent),
+                child: Stack(
+                  children: [
+                    Transform.translate(
+                      offset: Offset(dxAnimationDrawer.value, 0),
+                      child: CustomDrawer(
+                        size: size,
+                        end: end,
+                        padding: padding,
+                        currentWeather: state.currentWeather,
+                        isDarkMode: value.isDarkMode,
+                      ),
                     ),
-                  ),
-                  SafeArea(
-                    child: Transform.translate(
-                      offset: Offset(dxAnimation.value, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            bottomLeft: Radius.circular(20),
+                    SafeArea(
+                      child: Transform.translate(
+                        offset: Offset(dxAnimation.value, 0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              bottomLeft: Radius.circular(20),
+                            ),
+                            color: !value.isDarkMode
+                                ? isDay
+                                    ? const Color(0xff88bbfd)
+                                    : const Color(0xff63608f)
+                                : null,
+                            gradient: !value.isDarkMode && !isDay
+                                ? const LinearGradient(
+                                    colors: [
+                                      Color(0xff63608f),
+                                      Color(0xff49528b)
+                                    ],
+                                    stops: [.1, .5],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  )
+                                : null,
                           ),
-                          color: isDay && !value.isDarkMode
-                              ? const Color(0xff88bbfd)
-                              : null,
-                          gradient: !value.isDarkMode && !isDay
-                              ? const LinearGradient(
-                                  colors: [
-                                    Color(0xff63608f),
-                                    Color(0xff49528b)
-                                  ],
-                                  stops: [.1, .5],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                )
-                              : null,
-                        ),
-                        child: CustomAppBarWithContent(
-                          scrollController: scrollController,
-                          padding: padding,
-                          animationController: animationController,
-                          opacity: opacity,
-                          currentWeather: state.currentWeather,
-                          isDarkMode: value.isDarkMode,
+                          child: CustomAppBarWithContent(
+                            scrollController: scrollController,
+                            padding: padding,
+                            animationController: animationController,
+                            opacity: opacity,
+                            currentWeather: state.currentWeather,
+                            isDarkMode: value.isDarkMode,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

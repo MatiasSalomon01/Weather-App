@@ -28,7 +28,7 @@ class CustomDrawer extends StatelessWidget {
         decoration: BoxDecoration(
           color: !isDarkMode
               ? isDay
-                  ? const Color(0xff88bbfd)
+                  ? Colors.white10
                   : const Color(0xff63608f)
               : const Color(0xff171717),
           borderRadius: const BorderRadius.only(
@@ -94,7 +94,7 @@ class CustomDrawer extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '${currentWeather.current.temp_c}º',
+                  '${currentWeather.current.temp_c.toInt()}º',
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -143,7 +143,7 @@ class CustomDrawer extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '${currentWeather.current.temp_c}º',
+                  '${currentWeather.current.temp_c.toInt()}º',
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

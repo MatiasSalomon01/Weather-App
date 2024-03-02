@@ -29,9 +29,11 @@ class CustomAppBarWithContent extends StatelessWidget {
       controller: scrollController,
       slivers: [
         SliverAppBar(
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           pinned: true,
-          expandedHeight: kToolbarHeight * 5,
+          expandedHeight: kToolbarHeight * 5.4,
           collapsedHeight: kToolbarHeight * 2.5,
           flexibleSpace: Padding(
             padding: EdgeInsets.symmetric(horizontal: padding),
@@ -170,6 +172,13 @@ class CustomAppBarWithContent extends StatelessWidget {
                                 fontSize: 15,
                               ),
                             ),
+                            Text(
+                              '${weekDays[DateTime.now().weekday]}, ${DateTime.now().hour}:${DateTime.now().minute}',
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 15,
+                              ),
+                            ),
                           ],
                         ),
                       )
@@ -204,6 +213,10 @@ class CustomAppBarWithContent extends StatelessWidget {
             ),
           ),
         ),
+        // SliverToBoxAdapter(
+        //     child: SizedBox(
+        //   height: 50,
+        // )),
         SliverList.separated(
           itemBuilder: (context, index) => Container(
             margin: EdgeInsets.symmetric(horizontal: padding * .5),
@@ -336,3 +349,13 @@ class LottieImages {
     required this.percentage,
   });
 }
+
+final weekDays = {
+  1: 'lun',
+  2: 'mar',
+  3: 'mié',
+  4: 'jue',
+  5: 'vie',
+  6: 'sáb',
+  7: 'dom',
+};
