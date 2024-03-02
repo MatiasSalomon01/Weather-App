@@ -25,6 +25,7 @@ class CustomAppBarWithContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDay = currentWeather.current.is_day == 1;
+    final size = MediaQuery.of(context).size;
     return CustomScrollView(
       controller: scrollController,
       slivers: [
@@ -141,10 +142,17 @@ class CustomAppBarWithContent extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              currentWeather.current.condition.text,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 20),
+                            SizedBox(
+                              width: size.width * .55,
+                              child: Text(
+                                currentWeather.current.condition.text,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
                             ),
                             const SizedBox(height: 20),
                             Row(
