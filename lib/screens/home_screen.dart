@@ -82,30 +82,6 @@ class _HomeScreenState extends State<HomeScreen>
     final size = MediaQuery.of(context).size;
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
-        // if (state is WeatherLoading) {
-        //   return Scaffold(
-        //     backgroundColor: Colors.transparent,
-        //     body: Center(
-        //       child: Column(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         // crossAxisAlignment: CrossAxisAlignment.center,
-        //         children: [
-        //           LottieBuilder.asset(
-        //             'assets/loading.json',
-        //             height: 50,
-        //           ),
-        //           const Text(
-        //             'Cargando...',
-        //             style: TextStyle(
-        //               color: Colors.white70,
-        //             ),
-        //           )
-        //         ],
-        //       ),
-        //     ),
-        //   );
-        // }
-        // if (state is WeatherResult) {
         bool isDay = DateTime.now().hour < 18;
         if (state is WeatherResult) {
           isDay = state.currentWeather.current.is_day == 1;
@@ -201,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         ),
                       )
-                    : Center(
+                    : const Center(
                         child: Text(
                           'Error',
                           style: TextStyle(
