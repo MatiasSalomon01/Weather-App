@@ -125,10 +125,10 @@ class _HomeScreenState extends State<HomeScreen>
                         offset: Offset(dxAnimation.value, 0),
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              bottomLeft: Radius.circular(20),
-                            ),
+                            // borderRadius: const BorderRadius.only(
+                            //   topLeft: Radius.circular(20),
+                            //   bottomLeft: Radius.circular(20),
+                            // ),
                             color: !value.isDarkMode
                                 ? isDay
                                     ? const Color(0xff88bbfd)

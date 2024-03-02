@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:weather_app/models/models.dart';
 
@@ -226,16 +227,22 @@ class CustomAppBarWithContent extends StatelessWidget {
         //   height: 50,
         // )),
         SliverList.separated(
-          itemBuilder: (context, index) => Container(
-            margin: EdgeInsets.symmetric(horizontal: padding * .5),
-            height: 150,
-            decoration: BoxDecoration(
-                color: !isDarkMode
-                    ? isDay
-                        ? const Color(0xff61a4f2)
-                        : const Color(0xff3c4274)
-                    : const Color(0xff171717),
-                borderRadius: BorderRadius.circular(20)),
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () async {
+              // var isEnabled = await Geolocator.isLocationServiceEnabled();
+              // print(isEnabled);
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: padding * .5),
+              height: 150,
+              decoration: BoxDecoration(
+                  color: !isDarkMode
+                      ? isDay
+                          ? const Color(0xff61a4f2)
+                          : const Color(0xff3c4274)
+                      : const Color(0xff171717),
+                  borderRadius: BorderRadius.circular(20)),
+            ),
           ),
           itemCount: 5,
           separatorBuilder: (context, index) => const SizedBox(height: 10),
