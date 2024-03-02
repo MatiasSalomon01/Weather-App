@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:weather_app/models/current_weather_response.dart';
 import 'package:weather_app/models/models.dart';
@@ -19,19 +20,25 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     on<GetForecastWeatherEvent>((event, emit) {});
   }
 
+  Position? position = null;
+
   FutureOr<void> getCurrentWeather(event, emit) async {
     emit(WeatherLoading());
+
+    position ??= await getCurrentPosition();
+
     final url = Uri.https(
       'api.weatherapi.com',
       '/v1/forecast.json',
       {
-        'q': '-25.280296, -57.639788',
+        'q': position != null
+            ? '${position!.latitude}, ${position!.longitude}'
+            : '-25.280296, -57.639788',
         'lang': 'es',
         'key': '058ba3442b2d4cfa99f130744242102',
       },
     );
 
-    // try {
     final response = await http.get(url);
 
     if (response.statusCode != 200) {
@@ -41,9 +48,25 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       var currentWeather = CurrentWeatherResponse.fromJson(map);
       emit(WeatherResult(currentWeather: currentWeather));
     }
-    // } catch (e) {
-    //   print(e);
-    //   emit(WeatherError());
-    // }
+  }
+
+  Future<Position?> getCurrentPosition() async {
+    var isEnabled = await Geolocator.isLocationServiceEnabled();
+    if (isEnabled) {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.always ||
+          permission == LocationPermission.whileInUse) {
+        return await Geolocator.getCurrentPosition();
+      }
+    } else {
+      var permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.always ||
+          permission == LocationPermission.whileInUse) {
+        return await Geolocator.getCurrentPosition();
+      } else {
+        return null;
+      }
+    }
+    return null;
   }
 }
