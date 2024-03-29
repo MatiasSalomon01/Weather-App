@@ -36,6 +36,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
             : '-25.280296, -57.639788',
         'lang': 'es',
         'key': '058ba3442b2d4cfa99f130744242102',
+        'days': '1'
       },
     );
 

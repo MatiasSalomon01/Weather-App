@@ -227,15 +227,33 @@ class CustomAppBarWithContent extends StatelessWidget {
           itemBuilder: (context, index) => Container(
             margin: EdgeInsets.symmetric(horizontal: padding * .5),
             height: 150,
+            padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
-                color: !isDarkMode
-                    ? isDay
-                        ? const Color(0xff61a4f2)
-                        : const Color(0xff3c4274)
-                    : const Color(0xff171717),
-                borderRadius: BorderRadius.circular(20)),
+              color: !isDarkMode
+                  ? isDay
+                      ? const Color(0xff61a4f2)
+                      : const Color(0xff3c4274)
+                  : const Color(0xff171717),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${currentWeather.current.condition.text}. Mínima ${currentWeather.current.mintemp_c} C.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Divider(
+                  thickness: .2,
+                  // height: 40,
+                ),
+              ],
+            ),
           ),
-          itemCount: 5,
+          itemCount: 1,
           separatorBuilder: (context, index) => const SizedBox(height: 10),
         )
       ],

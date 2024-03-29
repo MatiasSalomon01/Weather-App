@@ -80,114 +80,125 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return BlocBuilder<WeatherBloc, WeatherState>(
-      builder: (context, state) {
-        bool isDay = DateTime.now().hour < 18;
-        if (state is WeatherResult) {
-          isDay = state.currentWeather.current.is_day == 1;
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) async {
+        if (details.delta.dx > 0) {
+          await animationController.forward();
+        } else {
+          await animationController.reverse();
         }
+        // print(details);
+      },
+      child: BlocBuilder<WeatherBloc, WeatherState>(
+        builder: (context, state) {
+          bool isDay = DateTime.now().hour < 18;
+          if (state is WeatherResult) {
+            isDay = state.currentWeather.current.is_day == 1;
+          }
 
-        return Consumer<ThemeProvider>(
-          builder: (context, value, child) => Scaffold(
-            extendBody: true,
-            extendBodyBehindAppBar: true,
-            backgroundColor: !value.isDarkMode
-                ? isDay
-                    ? const Color(0xff88bbfd)
-                    : const Color(0xff63608f)
-                : null,
-            //const Color(0xff61a4f2)
-            body: state is WeatherLoading
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        LottieBuilder.asset(
-                          'assets/loading.json',
-                          height: 50,
-                        ),
-                        const Text(
-                          'Cargando...',
-                          style: TextStyle(
-                            color: Colors.white70,
+          return Consumer<ThemeProvider>(
+            builder: (context, value, child) => Scaffold(
+              extendBody: true,
+              extendBodyBehindAppBar: true,
+              backgroundColor: !value.isDarkMode
+                  ? isDay
+                      ? const Color(0xff88bbfd)
+                      : const Color(0xff63608f)
+                  : null,
+              //const Color(0xff61a4f2)
+              body: state is WeatherLoading
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          LottieBuilder.asset(
+                            'assets/loading.json',
+                            height: 50,
                           ),
-                        )
-                      ],
-                    ),
-                  )
-                : state is WeatherResult
-                    ? RefreshIndicator(
-                        onRefresh: () async => context
-                            .read<WeatherBloc>()
-                            .add(GetCurrentWeatherEvent()),
-                        child: AnnotatedRegion<SystemUiOverlayStyle>(
-                          value: const SystemUiOverlayStyle(
-                              statusBarColor: Colors.transparent),
-                          child: Stack(
-                            children: [
-                              Transform.translate(
-                                offset: Offset(dxAnimationDrawer.value, 0),
-                                child: CustomDrawer(
-                                  size: size,
-                                  end: end,
-                                  padding: padding,
-                                  currentWeather: state.currentWeather,
-                                  isDarkMode: value.isDarkMode,
+                          const Text(
+                            'Cargando...',
+                            style: TextStyle(
+                              color: Colors.white70,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  : state is WeatherResult
+                      ? RefreshIndicator(
+                          onRefresh: () async => context
+                              .read<WeatherBloc>()
+                              .add(GetCurrentWeatherEvent()),
+                          child: AnnotatedRegion<SystemUiOverlayStyle>(
+                            value: const SystemUiOverlayStyle(
+                                statusBarColor: Colors.transparent),
+                            child: Stack(
+                              children: [
+                                Transform.translate(
+                                  offset: Offset(dxAnimationDrawer.value, 0),
+                                  child: CustomDrawer(
+                                    size: size,
+                                    end: end,
+                                    padding: padding,
+                                    currentWeather: state.currentWeather,
+                                    isDarkMode: value.isDarkMode,
+                                  ),
                                 ),
-                              ),
-                              SafeArea(
-                                child: Transform.translate(
-                                  offset: Offset(dxAnimation.value, 0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      // borderRadius: const BorderRadius.only(
-                                      //   topLeft: Radius.circular(20),
-                                      //   bottomLeft: Radius.circular(20),
-                                      // ),
-                                      color: !value.isDarkMode
-                                          ? isDay
-                                              ? const Color(0xff88bbfd)
-                                              : const Color(0xff63608f)
-                                          : null,
-                                      gradient: !value.isDarkMode && !isDay
-                                          ? const LinearGradient(
-                                              colors: [
-                                                Color(0xff63608f),
-                                                Color(0xff49528b)
-                                              ],
-                                              stops: [.1, .5],
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                            )
-                                          : null,
-                                    ),
-                                    child: CustomAppBarWithContent(
-                                      scrollController: scrollController,
-                                      padding: padding,
-                                      animationController: animationController,
-                                      opacity: opacity,
-                                      currentWeather: state.currentWeather,
-                                      isDarkMode: value.isDarkMode,
+                                SafeArea(
+                                  child: Transform.translate(
+                                    offset: Offset(dxAnimation.value, 0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        // borderRadius: const BorderRadius.only(
+                                        //   topLeft: Radius.circular(20),
+                                        //   bottomLeft: Radius.circular(20),
+                                        // ),
+                                        color: !value.isDarkMode
+                                            ? isDay
+                                                ? const Color(0xff88bbfd)
+                                                : const Color(0xff63608f)
+                                            : null,
+                                        gradient: !value.isDarkMode && !isDay
+                                            ? const LinearGradient(
+                                                colors: [
+                                                  Color(0xff63608f),
+                                                  Color(0xff49528b)
+                                                ],
+                                                stops: [.1, .5],
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                              )
+                                            : null,
+                                      ),
+                                      child: CustomAppBarWithContent(
+                                        scrollController: scrollController,
+                                        padding: padding,
+                                        animationController:
+                                            animationController,
+                                        opacity: opacity,
+                                        currentWeather: state.currentWeather,
+                                        isDarkMode: value.isDarkMode,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                          ),
+                        )
+                      : const Center(
+                          child: Text(
+                            'Error',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      )
-                    : const Center(
-                        child: Text(
-                          'Error',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-          ),
-        );
-      },
+            ),
+          );
+        },
+      ),
     );
   }
 }
