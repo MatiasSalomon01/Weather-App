@@ -1,3 +1,5 @@
+export 'package:weather_app/models/hour_model.dart';
+export 'package:weather_app/models/forecast_model.dart';
 export 'package:weather_app/models/condition_model.dart';
 export 'package:weather_app/models/current_model.dart';
 export 'package:weather_app/models/current_weather_response.dart';
