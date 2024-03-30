@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:weather_app/extensions/extensions.dart';
 import 'package:weather_app/models/models.dart';
+
+import '../custom_painters/dot_with_line.dart';
+import '../custom_painters/water_drop.dart';
 
 class CustomAppBarWithContent extends StatelessWidget {
   const CustomAppBarWithContent({
@@ -219,43 +223,25 @@ class CustomAppBarWithContent extends StatelessWidget {
             ),
           ),
         ),
-        // SliverToBoxAdapter(
-        //     child: SizedBox(
-        //   height: 50,
-        // )),
-        SliverList.separated(
-          itemBuilder: (context, index) => Container(
-            margin: EdgeInsets.symmetric(horizontal: padding * .5),
-            height: 150,
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: !isDarkMode
-                  ? isDay
-                      ? const Color(0xff61a4f2)
-                      : const Color(0xff3c4274)
-                  : const Color(0xff171717),
-              borderRadius: BorderRadius.circular(20),
+        SliverList.list(
+          children: [
+            _Card(
+              height: 211,
+              padding: padding,
+              isDarkMode: isDarkMode,
+              isDay: isDay,
+              child: ForecastChart(currentWeather: currentWeather),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${currentWeather.current.condition.text}. Mínima ${currentWeather.current.mintemp_c} C.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Divider(
-                  thickness: .2,
-                  // height: 40,
-                ),
-              ],
+            const SizedBox(height: 10),
+            _Card(
+              height: 100,
+              padding: padding,
+              isDarkMode: isDarkMode,
+              isDay: isDay,
+              child: Container(),
             ),
-          ),
-          itemCount: 1,
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
-        )
+          ],
+        ),
       ],
     );
   }
@@ -270,6 +256,148 @@ class CustomAppBarWithContent extends StatelessWidget {
       if (!exist) return mapLottiesDay.values.first;
       return mapLottiesDay[code]!;
     }
+  }
+}
+
+class _Card extends StatelessWidget {
+  const _Card({
+    super.key,
+    required this.padding,
+    required this.height,
+    required this.isDarkMode,
+    required this.isDay,
+    required this.child,
+  });
+
+  final double padding;
+  final double height;
+  final bool isDarkMode;
+  final bool isDay;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: padding * .5),
+      height: height,
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: !isDarkMode
+            ? isDay
+                ? const Color(0xff61a4f2)
+                : const Color(0xff3c4274)
+            : const Color(0xff171717),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: child,
+    );
+  }
+}
+
+class ForecastChart extends StatelessWidget {
+  const ForecastChart({
+    super.key,
+    required this.currentWeather,
+  });
+
+  final CurrentWeatherResponse currentWeather;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${currentWeather.current.condition.text}. Mínima ${currentWeather.current.mintemp_c.toInt()} C.',
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const Divider(thickness: .2),
+        Expanded(
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              var isFirst = index == 0;
+              var isLast = index + 1 == currentWeather.forecast.hours.length;
+
+              return Column(
+                children: [
+                  Text(
+                    currentWeather.forecast.hours[index].time.getHours(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Image.network(
+                    currentWeather.forecast.hours[index].condition.icon,
+                    height: 53,
+                  ),
+                  Text(
+                    "${currentWeather.forecast.hours[index].temp_c.toInt()} Cº",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    // color: Colors.red,
+                    height: 15,
+                    width: 53,
+                    child: CustomPaint(
+                      painter: DotWithLine(
+                        isFirst: isFirst,
+                        isLast: isLast,
+                        temp:
+                            currentWeather.forecast.hours[index].temp_c.toInt(),
+                        nextTemp: isLast
+                            ? currentWeather.forecast.hours[index].temp_c
+                                .toInt()
+                            : currentWeather.forecast.hours[index + 1].temp_c
+                                .toInt(),
+                        minTemp: currentWeather.forecast.minTemp,
+                        maxTemp: currentWeather.forecast.maxTemp,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: SizedBox(
+                          height: 15,
+                          width: 20,
+                          child: CustomPaint(
+                            painter: GotaDeAguaPainter(),
+                          ),
+                        ),
+                      ),
+                      // const SizedBox(width: 5),
+                      Text(
+                        "${currentWeather.forecast.hours[index].chance_of_rain} %",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+            itemCount: currentWeather.forecast.hours.length,
+            // itemCount: 2,
+          ),
+        ),
+      ],
+    );
   }
 }
 

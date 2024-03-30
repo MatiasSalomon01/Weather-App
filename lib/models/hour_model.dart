@@ -3,7 +3,7 @@
 import 'package:weather_app/models/models.dart';
 
 class Hour {
-  final String time;
+  final DateTime time;
   final double temp_c;
   final int is_day;
   final double wind_kph;
@@ -30,7 +30,7 @@ class Hour {
   static List<Hour> empty() {
     return [
       Hour(
-        time: "",
+        time: DateTime.now(),
         temp_c: 0,
         is_day: 0,
         wind_kph: 0,
@@ -46,7 +46,7 @@ class Hour {
 
   factory Hour.fromJson(Map<String, dynamic> map) {
     return Hour(
-      time: map["time"],
+      time: DateTime.parse(map["time"]),
       temp_c: map["temp_c"],
       is_day: map["is_day"],
       wind_kph: map["wind_kph"],

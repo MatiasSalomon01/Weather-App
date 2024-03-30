@@ -16,7 +16,7 @@ class Condition {
   factory Condition.fromJson(Map<String, dynamic> map) {
     return Condition(
       text: map['text'],
-      icon: map['icon'],
+      icon: "https:${map['icon']}",
       code: map['code'],
     );
   }
