@@ -226,6 +226,7 @@ class CustomAppBarWithContent extends StatelessWidget {
         SliverList.list(
           children: [
             _Card(
+              margin: EdgeInsets.symmetric(horizontal: padding * .5),
               height: 211,
               padding: padding,
               isDarkMode: isDarkMode,
@@ -233,11 +234,94 @@ class CustomAppBarWithContent extends StatelessWidget {
               child: ForecastChart(currentWeather: currentWeather),
             ),
             const SizedBox(height: 10),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: padding * .5),
+              height: 295,
+              child: GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 4 / 3,
+                children: [
+                  _Card(
+                    margin: EdgeInsets.zero,
+                    height: 0,
+                    padding: padding,
+                    isDarkMode: isDarkMode,
+                    isDay: isDay,
+                    child: _GridContent(
+                      title: "Indice UV",
+                      subTitle: indexUv[currentWeather.current.uv.toInt()]!,
+                      imageUrl:
+                          "https://cdn.icon-icons.com/icons2/1441/PNG/128/sun_98674.png",
+                    ),
+                  ),
+                  _Card(
+                    margin: EdgeInsets.zero,
+                    height: 0,
+                    padding: padding,
+                    isDarkMode: isDarkMode,
+                    isDay: isDay,
+                    child: _GridContent(
+                      title: "Humedad",
+                      subTitle: "${currentWeather.current.humidity} %",
+                      imageUrl:
+                          "https://cdn.icon-icons.com/icons2/527/PNG/512/Humidity_icon-icons.com_52507.png",
+                    ),
+                  ),
+                  _Card(
+                    margin: EdgeInsets.zero,
+                    height: 0,
+                    padding: padding,
+                    isDarkMode: isDarkMode,
+                    isDay: isDay,
+                    child: _GridContent(
+                      title: "Viento",
+                      subTitle: "${currentWeather.current.wind_kph} km/h",
+                      imageUrl:
+                          "https://cdn.icon-icons.com/icons2/520/PNG/512/Weather-wind_icon-icons.com_51816.png",
+                      imageHeight: 40,
+                      spacer: const SizedBox(height: 10),
+                    ),
+                  ),
+                  _Card(
+                    margin: EdgeInsets.zero,
+                    height: 0,
+                    padding: padding,
+                    isDarkMode: isDarkMode,
+                    isDay: isDay,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _GridContent(
+                          title: "Amanecer",
+                          subTitle: currentWeather.current.sunrise,
+                          imageUrl:
+                              "https://cdn.icon-icons.com/icons2/2527/PNG/512/sun_sunshine_sunrise_icon_151789.png",
+                          imageHeight: 45,
+                          spacer: const SizedBox(height: 10),
+                        ),
+                        _GridContent(
+                          title: "Atardecer",
+                          subTitle: currentWeather.current.sunset,
+                          imageUrl:
+                              "https://cdn.icon-icons.com/icons2/2527/PNG/512/sunrise_weather_icon_151777.png",
+                          imageHeight: 45,
+                          spacer: const SizedBox(height: 10),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             _Card(
-              height: 100,
               padding: padding,
+              height: 500,
               isDarkMode: isDarkMode,
               isDay: isDay,
+              margin: EdgeInsets.symmetric(horizontal: padding * .5),
               child: Container(),
             ),
           ],
@@ -259,6 +343,53 @@ class CustomAppBarWithContent extends StatelessWidget {
   }
 }
 
+class _GridContent extends StatelessWidget {
+  const _GridContent({
+    super.key,
+    required this.title,
+    required this.subTitle,
+    required this.imageUrl,
+    this.imageHeight = 60,
+    this.spacer = const SizedBox(),
+  });
+
+  final String title;
+  final String subTitle;
+  final String imageUrl;
+  final double imageHeight;
+  final Widget spacer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.network(
+          imageUrl,
+          height: imageHeight,
+        ),
+        spacer,
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          subTitle,
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 13,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _Card extends StatelessWidget {
   const _Card({
     super.key,
@@ -267,6 +398,7 @@ class _Card extends StatelessWidget {
     required this.isDarkMode,
     required this.isDay,
     required this.child,
+    required this.margin,
   });
 
   final double padding;
@@ -274,11 +406,11 @@ class _Card extends StatelessWidget {
   final bool isDarkMode;
   final bool isDay;
   final Widget child;
-
+  final EdgeInsets margin;
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: padding * .5),
+      margin: margin,
       height: height,
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
@@ -510,4 +642,18 @@ final weekDays = {
   5: 'vie',
   6: 'sáb',
   7: 'dom',
+};
+
+final Map<int, String> indexUv = {
+  1: "Bajo",
+  2: "Bajo",
+  3: "Medio",
+  4: "Medio",
+  5: "Medio",
+  6: "Alto",
+  7: "Alto",
+  8: "Muy Alto",
+  9: "Muy Alto",
+  10: "Muy Alto",
+  11: "Extremadamente alto",
 };

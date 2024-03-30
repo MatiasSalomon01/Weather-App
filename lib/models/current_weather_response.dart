@@ -25,6 +25,7 @@ class CurrentWeatherResponse {
       current: Current.fromJson(
         map['current'],
         map["forecast"]['forecastday'][0]["day"],
+        map["forecast"]['forecastday'][0]["astro"],
       ),
       forecast: Forecast.fromJson(
           map["forecast"]['forecastday'][0]["hour"] as List<dynamic>),

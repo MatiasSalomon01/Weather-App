@@ -14,6 +14,8 @@ class Current {
   final int humidity;
   final double feelslike_c;
   final double uv;
+  final String sunrise;
+  final String sunset;
 
   Current({
     required this.last_updated,
@@ -27,6 +29,8 @@ class Current {
     required this.uv,
     this.maxtemp_c = 0.0,
     this.mintemp_c = 0.0,
+    required this.sunrise,
+    required this.sunset,
   });
 
   static Current empty() {
@@ -40,11 +44,13 @@ class Current {
       humidity: 0,
       feelslike_c: 0,
       uv: 0,
+      sunrise: "",
+      sunset: "",
     );
   }
 
-  factory Current.fromJson(
-      Map<String, dynamic> map, Map<String, dynamic> map2) {
+  factory Current.fromJson(Map<String, dynamic> map, Map<String, dynamic> map2,
+      Map<String, dynamic> map3) {
     return Current(
       last_updated: map['last_updated'],
       temp_c: map['temp_c'],
@@ -57,6 +63,8 @@ class Current {
       uv: map['uv'],
       maxtemp_c: map2['maxtemp_c'],
       mintemp_c: map2['mintemp_c'],
+      sunrise: map3["sunrise"],
+      sunset: map3["sunset"],
     );
   }
 }
