@@ -480,7 +480,7 @@ class ForecastChart extends StatelessWidget {
                   Container(
                     // color: Colors.red,
                     height: 15,
-                    width: 53,
+                    width: 53.5,
                     child: CustomPaint(
                       painter: DotWithLine(
                         isFirst: isFirst,
